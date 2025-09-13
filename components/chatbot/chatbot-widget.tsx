@@ -126,8 +126,26 @@ How can I assist you today?`,
           
           // Handle different response formats from backend
           
-          // Format 1: {"page": "dashboard"}
-          if (parsedReply.page) {
+          // Format 1: OpenAI Agent SDK structured responses
+          if (parsedReply.type === "navigation_response" && parsedReply.navigation) {
+            console.log("✅ OpenAI Agent navigation response:", parsedReply)
+            botReply = parsedReply.message || "Processing your request..."
+            
+            const targetPath = parsedReply.navigation.path
+            const delay = parsedReply.navigation.delay_ms || 500
+            
+            console.log(`🚀 Executing navigation to: ${targetPath} in ${delay}ms`)
+            setTimeout(() => {
+              console.log("🔄 Router.push called with:", targetPath)
+              router.push(targetPath)
+            }, delay)
+            
+          } else if (parsedReply.type === "message_response") {
+            console.log("✅ OpenAI Agent message response:", parsedReply)
+            botReply = parsedReply.message || "Request processed successfully"
+            
+          // Format 2: Simple page format {"page": "dashboard"}
+          } else if (parsedReply.page) {
             console.log("✅ Simple page navigation detected:", parsedReply.page)
             const pageMap: { [key: string]: string } = {
               'dashboard': '/dashboard',
@@ -208,21 +226,6 @@ How can I assist you today?`,
               }, 1000)
             }
             
-          } else if (parsedReply.type === "navigation_response" && parsedReply.navigation) {
-            // Handle structured navigation response
-            console.log("Navigation detected:", parsedReply.navigation)
-            botReply = parsedReply.message || "Processing your request..."
-            navigationData = parsedReply.navigation
-            
-            // Force immediate navigation for testing
-            console.log("FORCING IMMEDIATE NAVIGATION TO:", navigationData?.path)
-            setTimeout(() => {
-              console.log("Executing navigation to:", navigationData?.path)
-              if (navigationData?.path) {
-                router.push(navigationData.path)
-              }
-            }, 500) // Very short delay for testing
-            
           } else if (parsedReply.type === "payment_redirect") {
             // Handle payment redirect response
             console.log("Payment redirect detected:", parsedReply.payment_url)
@@ -264,7 +267,7 @@ How can I assist you today?`,
         }
         setMessages((prev) => [...prev, botMessage])
 
-        // Handle navigation with React Router (preserves chatbot state)
+        // Legacy navigation handling (keeping for backward compatibility)
         if (navigationData && navigationData.action === "navigate" && navigationData.path) {
           const delay = navigationData.delay_ms || 1500
           
@@ -273,16 +276,7 @@ How can I assist you today?`,
           // Automatic navigation
           setTimeout(() => {
             console.log(`Executing AUTOMATIC navigation to: ${navigationData.path}`)
-            try {
-              // Use React Router push to navigate without page refresh
-              // This preserves the chatbot state and keeps it open
-              router.push(navigationData.path)
-              setPendingNavigation(null) // Clear manual navigation button
-              console.log("Automatic navigation executed successfully")
-            } catch (navError) {
-              console.error("Automatic navigation failed:", navError)
-              // Keep manual navigation button if automatic fails
-            }
+            router.push(navigationData.path)
           }, delay)
         } else {
           console.log("No navigation data found or invalid format:", navigationData)
