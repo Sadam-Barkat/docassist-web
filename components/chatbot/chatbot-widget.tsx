@@ -88,6 +88,18 @@ How can I assist you today?`,
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return
 
+    // Check if user is authenticated for chatbot
+    if (!user) {
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        message: "Please login to use the AI assistant. The chatbot requires authentication to provide personalized assistance.",
+        sender: "bot",
+        timestamp: new Date().toISOString(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+      return
+    }
+
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       message: inputMessage.trim(),

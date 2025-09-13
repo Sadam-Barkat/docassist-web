@@ -580,8 +580,29 @@ export const paymentsApi = {
 export const chatbotApi = {
   async sendMessage(message: string): Promise<ApiResponse<{ reply: string }>> {
     try {
-      const response = await apiClient.post('/chatbot/', { message })
-      return { success: true, data: response.data }
+      // Get auth token for authenticated requests
+      const token = getAuthToken()
+      const headers: any = {
+        'Content-Type': 'application/json',
+      }
+      
+      if (token) {
+        headers.Authorization = `Bearer ${token}`
+      }
+
+      const response = await fetch(`${API_BASE_URL}/chatbot/`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ message }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      return { success: true, data }
     } catch (error) {
       return handleApiError(error)
     }
