@@ -11,8 +11,8 @@ async function testBackend() {
 
     // Test login endpoint with simple request
     const loginResponse = await axios.post('https://docassist-api.onrender.com/auth/login', {
-      email: 'sadambarkat405@gmail.com',
-      password: 'sadam@123'
+      email: 'test@example.com',
+      password: 'testpassword'
     }, {
       headers: { 'Content-Type': 'application/json' }
     });
