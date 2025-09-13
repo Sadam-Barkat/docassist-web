@@ -23,7 +23,7 @@ export function ProtectedRoute({ children, adminOnly = false }: ProtectedRoutePr
         return
       }
 
-      if (adminOnly && user?.role !== "admin") {
+      if (adminOnly && user?.is_adman !== "admin") {
         router.push("/dashboard")
         return
       }
@@ -38,7 +38,7 @@ export function ProtectedRoute({ children, adminOnly = false }: ProtectedRoutePr
     )
   }
 
-  if (!isAuthenticated || (adminOnly && user?.role !== "admin")) {
+  if (!isAuthenticated || (adminOnly && user?.is_adman !== "admin")) {
     return null
   }
 
