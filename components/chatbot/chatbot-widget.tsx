@@ -144,7 +144,37 @@ How can I assist you today?`,
             console.log("✅ OpenAI Agent message response:", parsedReply)
             botReply = parsedReply.message || "Request processed successfully"
             
-          // Format 2: Simple page format {"page": "dashboard"}
+          // Format 2: Simple response format {"response": "Redirecting to dashboard..."}
+          } else if (parsedReply.response) {
+            console.log("✅ Simple response format detected:", parsedReply.response)
+            
+            // Check if response mentions redirecting/navigating to a specific page
+            const redirectMatch = parsedReply.response.match(/(?:redirecting to|navigating to|go to|show|visit)\s+(\w+)/i)
+            if (redirectMatch) {
+              const pageName = redirectMatch[1].toLowerCase()
+              const pageMap: { [key: string]: string } = {
+                'dashboard': '/dashboard',
+                'appointments': '/appointments',
+                'appointment': '/book-appointment',
+                'admin': '/admin',
+                'profile': '/profile',
+                'doctors': '/doctors',
+                'doctor': '/doctors'
+              }
+              
+              const targetPath = pageMap[pageName] || `/${pageName}`
+              botReply = `✅ ${parsedReply.response}`
+              
+              console.log("🚀 Executing redirect to:", targetPath)
+              setTimeout(() => {
+                console.log("🔄 Router.push called with:", targetPath)
+                router.push(targetPath)
+              }, 1000)
+            } else {
+              botReply = parsedReply.response
+            }
+            
+          // Format 3: Simple page format {"page": "dashboard"}
           } else if (parsedReply.page) {
             console.log("✅ Simple page navigation detected:", parsedReply.page)
             const pageMap: { [key: string]: string } = {
