@@ -126,7 +126,7 @@ How can I assist you today?`,
           
           // Handle simple page navigation format from backend: {"page": "dashboard"}
           if (parsedReply.page) {
-            console.log("Simple page navigation detected:", parsedReply.page)
+            console.log("✅ Simple page navigation detected:", parsedReply.page)
             const pageMap: { [key: string]: string } = {
               'dashboard': '/dashboard',
               'appointments': '/appointments',
@@ -139,8 +139,9 @@ How can I assist you today?`,
             const targetPath = pageMap[parsedReply.page] || `/${parsedReply.page}`
             botReply = `✅ Navigating to ${parsedReply.page}...`
             
-            console.log("Navigating to:", targetPath)
+            console.log("🚀 Executing navigation to:", targetPath)
             setTimeout(() => {
+              console.log("🔄 Router.push called with:", targetPath)
               router.push(targetPath)
             }, 500)
             
