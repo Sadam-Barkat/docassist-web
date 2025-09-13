@@ -50,7 +50,7 @@ export default function ProfilePage() {
       const formData = new FormData()
       formData.append('file', file)
 
-      const response = await fetch('http://127.0.0.1:8000/upload/profile-image', {
+      const response = await fetch('https://docassist-api.onrender.com/upload/profile-image', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -88,7 +88,7 @@ export default function ProfilePage() {
     setError("")
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/upload/profile-image', {
+      const response = await fetch('https://docassist-api.onrender.com/upload/profile-image', {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
@@ -124,7 +124,7 @@ export default function ProfilePage() {
     setIsSaving(true)
     setError("")
     try {
-      const response = await fetch('http://127.0.0.1:8000/users/me', {
+      const response = await fetch('https://docassist-api.onrender.com/users/me', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -218,7 +218,7 @@ export default function ProfilePage() {
                   <Avatar className="h-24 w-24 mx-auto mb-4">
                     {formData.image_url ? (
                       <AvatarImage 
-                        src={`http://127.0.0.1:8000${formData.image_url}`} 
+                        src={`https://docassist-api.onrender.com${formData.image_url}`} 
                         alt="Profile picture" 
                       />
                     ) : null}

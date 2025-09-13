@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
     setMessage("")
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/password/forgot`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://docassist-api.onrender.com'}/password/forgot`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

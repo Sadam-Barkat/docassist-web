@@ -8,7 +8,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: false, // Enable image optimization
-    domains: ['localhost', '127.0.0.1'], // Add your API domains
+    domains: ['localhost', '127.0.0.1', 'docassist-api.onrender.com'], // Add your API domains
   },
   // Enable experimental features for better performance
   experimental: {

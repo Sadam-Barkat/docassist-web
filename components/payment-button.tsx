@@ -42,7 +42,7 @@ export function PaymentButton({
 
     try {
       // Create appointment booking (which creates Stripe session)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/appointments/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://docassist-api.onrender.com'}/appointments/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

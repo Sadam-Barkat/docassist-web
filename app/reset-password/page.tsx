@@ -65,7 +65,7 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/password/reset`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://docassist-api.onrender.com'}/password/reset`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

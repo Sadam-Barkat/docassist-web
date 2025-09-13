@@ -12,7 +12,7 @@ import type {
 import apiClient, { handleApiResponse, handleApiError } from "./api-client"
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://docassist-api.onrender.com'
 
 // Helper function to get auth token
 const getAuthToken = () => {
