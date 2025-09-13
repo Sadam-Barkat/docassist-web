@@ -124,7 +124,9 @@ How can I assist you today?`,
           const parsedReply = JSON.parse(response.data.reply)
           console.log("Parsed chatbot response:", parsedReply)
           
-          // Handle simple page navigation format from backend: {"page": "dashboard"}
+          // Handle different response formats from backend
+          
+          // Format 1: {"page": "dashboard"}
           if (parsedReply.page) {
             console.log("✅ Simple page navigation detected:", parsedReply.page)
             const pageMap: { [key: string]: string } = {
@@ -144,6 +146,67 @@ How can I assist you today?`,
               console.log("🔄 Router.push called with:", targetPath)
               router.push(targetPath)
             }, 500)
+            
+          // Format 2: {"response": "OK, redirecting to dashboard."}
+          } else if (parsedReply.response) {
+            console.log("✅ Response format detected:", parsedReply.response)
+            
+            // Check if response mentions redirecting/navigating to a page
+            const redirectMatch = parsedReply.response.match(/(?:redirecting to|navigating to|go to|show|visit)\s+(\w+)/i)
+            if (redirectMatch) {
+              const pageName = redirectMatch[1].toLowerCase()
+              const pageMap: { [key: string]: string } = {
+                'dashboard': '/dashboard',
+                'appointments': '/appointments',
+                'appointment': '/book-appointment',
+                'admin': '/admin',
+                'profile': '/profile',
+                'doctors': '/doctors',
+                'doctor': '/doctors'
+              }
+              
+              const targetPath = pageMap[pageName] || `/${pageName}`
+              botReply = `✅ ${parsedReply.response}`
+              
+              console.log("🚀 Executing redirect to:", targetPath)
+              setTimeout(() => {
+                console.log("🔄 Router.push called with:", targetPath)
+                router.push(targetPath)
+              }, 1000)
+            } else {
+              botReply = parsedReply.response
+            }
+            
+          // Format 3: {"doctors": []} or other data responses
+          } else if (parsedReply.doctors !== undefined) {
+            console.log("✅ Doctors data detected:", parsedReply.doctors)
+            if (parsedReply.doctors.length === 0) {
+              botReply = "📋 No doctors found in the system. You can add doctors through the admin panel."
+              // Navigate to doctors page to show the empty state
+              setTimeout(() => {
+                router.push('/doctors')
+              }, 1000)
+            } else {
+              botReply = `👨‍⚕️ Found ${parsedReply.doctors.length} doctors. Showing doctors page...`
+              setTimeout(() => {
+                router.push('/doctors')
+              }, 1000)
+            }
+            
+          // Format 4: {"appointments": []} or other data responses  
+          } else if (parsedReply.appointments !== undefined) {
+            console.log("✅ Appointments data detected:", parsedReply.appointments)
+            if (parsedReply.appointments.length === 0) {
+              botReply = "📅 No appointments found. You can book a new appointment."
+              setTimeout(() => {
+                router.push('/appointments')
+              }, 1000)
+            } else {
+              botReply = `📅 Found ${parsedReply.appointments.length} appointments. Showing appointments page...`
+              setTimeout(() => {
+                router.push('/appointments')
+              }, 1000)
+            }
             
           } else if (parsedReply.type === "navigation_response" && parsedReply.navigation) {
             // Handle structured navigation response
