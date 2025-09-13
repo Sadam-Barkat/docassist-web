@@ -1,0 +1,5 @@
+# Frontend Environment Variables Template
+# Copy this to .env.local for local development
+# Add to Vercel environment variables for production
+
+NEXT_PUBLIC_API_URL=https://docassist-api.onrender.com

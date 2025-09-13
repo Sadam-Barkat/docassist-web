@@ -1,7 +1,7 @@
 import { apiCache } from './cache'
 
 // API Configuration  
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://docassist-api.onrender.com'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://docassist-api.onrender.com'
 
 // Simple fetch-based API client to avoid CORS preflight issues
 const apiClient = {
