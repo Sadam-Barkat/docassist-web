@@ -58,7 +58,7 @@ export function Navigation() {
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   >
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback>{user ? getInitials(`${user.firstName || ''} ${user.lastName || ''}`.trim()) : "U"}</AvatarFallback>
+                      <AvatarFallback>{user ? getInitials(user.name || '') : "U"}</AvatarFallback>
                     </Avatar>
                   </Button>
                   
@@ -66,7 +66,7 @@ export function Navigation() {
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 z-50">
                       <div className="flex items-center justify-start gap-2 p-3 border-b">
                         <div className="flex flex-col space-y-1 leading-none">
-                          <p className="font-medium">{user ? `${user.firstName} ${user.lastName}` : "User"}</p>
+                          <p className="font-medium">{user ? user.name : "User"}</p>
                           <p className="w-[200px] truncate text-sm text-gray-500">{user?.email}</p>
                         </div>
                       </div>
@@ -88,7 +88,7 @@ export function Navigation() {
                           <Calendar className="mr-2 h-4 w-4" />
                           My Appointments
                         </Link>
-                        {user?.role === "admin" && (
+                        {user?.is_adman === "admin" && (
                           <Link 
                             href="/admin" 
                             className="flex items-center px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"

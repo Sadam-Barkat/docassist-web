@@ -32,12 +32,12 @@ export function ChatbotWidget() {
     // Re-initialize with welcome message
     const welcomeMessage: ChatMessage = {
       id: "1",
-      message: `Hello${user ? ` ${user.firstName}` : ""}! I'm your HealthCare+ AI assistant. I can help you with:
+      message: `Hello${user ? ` ${user.name}` : ""}! I'm your HealthCare+ AI assistant. I can help you with:
 
 • Finding doctors by specialty or name
 • Booking appointments
 • Managing your profile
-${user?.role === "admin" ? "• Admin: Managing doctors and users" : ""}
+${user?.is_adman === "admin" ? "• Admin: Managing doctors and users" : ""}
 
 How can I assist you today?`,
       sender: "bot",
@@ -57,12 +57,12 @@ How can I assist you today?`,
     setTimeout(() => {
       const welcomeMessage: ChatMessage = {
         id: "1",
-        message: `Hello${user ? ` ${user.firstName}` : ""}! I'm your HealthCare+ AI assistant. I can help you with:
+        message: `Hello${user ? ` ${user.name}` : ""}! I'm your HealthCare+ AI assistant. I can help you with:
 
 • Finding doctors by specialty or name
 • Booking appointments
 • Managing your profile
-${user?.role === "admin" ? "• Admin: Managing doctors and users" : ""}
+${user?.is_adman === "admin" ? "• Admin: Managing doctors and users" : ""}
 
 How can I assist you today?`,
         sender: "bot",
