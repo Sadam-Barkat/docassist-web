@@ -124,7 +124,27 @@ How can I assist you today?`,
           const parsedReply = JSON.parse(response.data.reply)
           console.log("Parsed chatbot response:", parsedReply)
           
-          if (parsedReply.type === "navigation_response" && parsedReply.navigation) {
+          // Handle simple page navigation format from backend: {"page": "dashboard"}
+          if (parsedReply.page) {
+            console.log("Simple page navigation detected:", parsedReply.page)
+            const pageMap: { [key: string]: string } = {
+              'dashboard': '/dashboard',
+              'appointments': '/appointments',
+              'book-appointment': '/book-appointment',
+              'admin': '/admin',
+              'profile': '/profile',
+              'doctors': '/doctors'
+            }
+            
+            const targetPath = pageMap[parsedReply.page] || `/${parsedReply.page}`
+            botReply = `✅ Navigating to ${parsedReply.page}...`
+            
+            console.log("Navigating to:", targetPath)
+            setTimeout(() => {
+              router.push(targetPath)
+            }, 500)
+            
+          } else if (parsedReply.type === "navigation_response" && parsedReply.navigation) {
             // Handle structured navigation response
             console.log("Navigation detected:", parsedReply.navigation)
             botReply = parsedReply.message || "Processing your request..."
