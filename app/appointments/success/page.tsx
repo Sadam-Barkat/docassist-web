@@ -32,12 +32,16 @@ export default function PaymentSuccessPage() {
       return
     }
 
-    // Fetch appointment details using session ID
+    // Show success message without requiring authentication
+    // Since payment was successful, we can show basic confirmation
+    setLoading(false)
+    
+    // Optional: Try to fetch details if user is logged in
     const fetchAppointmentDetails = async () => {
       try {
         const token = localStorage.getItem('token')
         if (!token) {
-          router.push('/login')
+          // Don't redirect to login, just show basic success message
           return
         }
 
@@ -51,13 +55,10 @@ export default function PaymentSuccessPage() {
         if (response.ok) {
           const data = await response.json()
           setAppointmentDetails(data)
-        } else {
-          setError('Failed to fetch appointment details')
         }
       } catch (err) {
-        setError('An error occurred while fetching appointment details')
-      } finally {
-        setLoading(false)
+        // Silently fail, show basic success message
+        console.log('Could not fetch appointment details:', err)
       }
     }
 
@@ -150,8 +151,21 @@ export default function PaymentSuccessPage() {
               </>
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-600">Appointment details will be available shortly.</p>
-                <p className="text-sm text-gray-500 mt-2">Session ID: {sessionId}</p>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                  <p className="text-green-800 font-semibold">Payment Successful!</p>
+                  <p className="text-green-700 text-sm mt-1">Your appointment has been booked successfully.</p>
+                </div>
+                <p className="text-gray-600 mb-2">Your appointment confirmation will be sent to your email.</p>
+                <p className="text-sm text-gray-500">Session ID: {sessionId}</p>
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <p className="text-blue-800 text-sm">
+                    <strong>Next Steps:</strong><br />
+                    • Check your email for appointment details<br />
+                    • Log in to view your appointments<br />
+                    • Arrive 15 minutes early on your appointment day
+                  </p>
+                </div>
               </div>
             )}
           </CardContent>
@@ -175,17 +189,17 @@ export default function PaymentSuccessPage() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4">
           <Button 
-            onClick={() => router.push('/appointments')} 
+            onClick={() => router.push('/login')} 
             className="flex-1"
           >
-            View My Appointments
+            Login to View Appointments
           </Button>
           <Button 
-            onClick={() => router.push('/dashboard')} 
+            onClick={() => router.push('/')} 
             variant="outline" 
             className="flex-1"
           >
-            Go to Dashboard
+            Go to Home
           </Button>
         </div>
       </div>
