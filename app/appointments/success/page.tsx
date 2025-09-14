@@ -36,33 +36,53 @@ export default function PaymentSuccessPage() {
     // Since payment was successful, we can show basic confirmation
     setLoading(false)
     
-    // Optional: Try to fetch details if user is logged in
-    const fetchAppointmentDetails = async () => {
+    // Try to verify payment and create appointment if needed
+    const verifyPaymentAndCreateAppointment = async () => {
       try {
-        const token = localStorage.getItem('token')
-        if (!token) {
-          // Don't redirect to login, just show basic success message
-          return
-        }
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/session/${sessionId}`, {
+        // Call verify endpoint to ensure appointment is created
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/verify/${sessionId}`, {
+          method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         })
 
         if (response.ok) {
           const data = await response.json()
-          setAppointmentDetails(data)
+          console.log('Payment verification:', data)
+          
+          // Try to fetch appointment details if user is logged in
+          const token = localStorage.getItem('token')
+          if (token) {
+            try {
+              const appointmentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/user`, {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                }
+              })
+              
+              if (appointmentResponse.ok) {
+                const appointments = await appointmentResponse.json()
+                // Find the appointment with matching session ID
+                const recentAppointment = appointments.find((apt: any) => 
+                  apt.stripe_payment_id === sessionId
+                )
+                if (recentAppointment) {
+                  setAppointmentDetails(recentAppointment)
+                }
+              }
+            } catch (err) {
+              console.log('Could not fetch appointment details:', err)
+            }
+          }
         }
       } catch (err) {
-        // Silently fail, show basic success message
-        console.log('Could not fetch appointment details:', err)
+        console.log('Payment verification failed:', err)
       }
     }
 
-    fetchAppointmentDetails()
+    verifyPaymentAndCreateAppointment()
   }, [sessionId, router])
 
   if (loading) {
