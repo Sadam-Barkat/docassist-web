@@ -303,18 +303,18 @@ How can I assist you today?`,
           
           console.log(`Scheduling AUTOMATIC navigation to ${navigationData.path} in ${delay}ms`)
           
-          // Auto-minimize chatbot on mobile when redirecting
-          const isMobile = window.innerWidth < 768 // md breakpoint
-          if (isMobile) {
-            setTimeout(() => {
-              setIsOpen(false) // Minimize chatbot on mobile
-            }, delay - 500) // Close slightly before redirect
-          }
-          
           // Automatic navigation
           setTimeout(() => {
             console.log(`Executing AUTOMATIC navigation to: ${navigationData.path}`)
             router.push(navigationData.path)
+            
+            // Auto-minimize chatbot on mobile after redirect (to avoid refresh issues)
+            const isMobile = window.innerWidth < 768 // md breakpoint
+            if (isMobile) {
+              setTimeout(() => {
+                setIsOpen(false) // Minimize chatbot on mobile after navigation
+              }, 1000) // Close 1 second after redirect
+            }
           }, delay)
         } else {
           console.log("No navigation data found or invalid format:", navigationData)

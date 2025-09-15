@@ -203,7 +203,7 @@ export default function AppointmentsPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
             <div className="flex items-center text-gray-600">
               <Calendar className="h-4 w-4 mr-2" />
               <span>{format(appointmentDateTime, "EEEE, MMMM dd, yyyy")}</span>

@@ -106,7 +106,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Stats */}
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Upcoming Appointments</CardTitle>
@@ -154,7 +154,7 @@ export default function DashboardPage() {
             </Card>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
             {/* Upcoming Appointments */}
             <div className="lg:col-span-2">
               <Card>
@@ -178,7 +178,7 @@ export default function DashboardPage() {
                         if (!doctor) return null
 
                         return (
-                          <div key={appointment.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                          <div key={appointment.id} className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 p-4 bg-gray-50 rounded-lg">
                             <Avatar className="h-12 w-12">
                               <AvatarImage src={doctor.profileImage || "/placeholder.svg"} />
                               <AvatarFallback>{getInitials(doctor.name)}</AvatarFallback>
