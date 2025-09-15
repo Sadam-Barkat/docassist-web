@@ -12,11 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { User, LogOut, Settings, Calendar } from "lucide-react"
+import { User, LogOut, Settings, Calendar, Menu, X } from "lucide-react"
 
 export function Navigation() {
   const { isAuthenticated, user, logout } = useAuth()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const getInitials = (name: string) => {
     const nameParts = name?.split(' ') || []
@@ -39,6 +40,16 @@ export function Navigation() {
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
+                {/* Mobile menu button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                  {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </Button>
+
                 <div className="hidden md:flex items-center gap-4">
                   <Link href="/dashboard">
                     <Button variant="ghost">Dashboard</Button>
@@ -136,6 +147,68 @@ export function Navigation() {
             )}
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {isMobileMenuOpen && isAuthenticated && (
+          <div className="md:hidden border-t bg-white">
+            <div className="px-4 py-2 space-y-1">
+              <Link 
+                href="/dashboard" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+              <Link 
+                href="/doctors" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Doctors
+              </Link>
+              <Link 
+                href="/appointments" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Appointments
+              </Link>
+              <Link 
+                href="/profile" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Profile
+              </Link>
+              {user?.is_adman === "admin" && (
+                <Link 
+                  href="/admin" 
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Admin Panel
+                </Link>
+              )}
+              <button 
+                onClick={() => {
+                  logout()
+                  setIsMobileMenuOpen(false)
+                }} 
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                Log out
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Click outside to close mobile menu */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 z-40 md:hidden" 
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
       </div>
     </nav>
   )

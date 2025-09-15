@@ -459,7 +459,7 @@ How can I assist you today?`,
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:right-6 sm:left-auto w-auto sm:w-96 h-[80vh] sm:h-[500px] max-h-[600px] bg-white rounded-lg shadow-xl z-50 flex flex-col border">
+        <div className="fixed bottom-4 left-4 right-4 top-20 sm:bottom-6 sm:right-6 sm:left-auto sm:top-auto w-auto sm:w-96 h-auto sm:h-[500px] sm:max-h-[600px] bg-white rounded-lg shadow-xl z-50 flex flex-col border">
           {/* Header */}
           <div className="flex items-center justify-between p-3 bg-blue-600 text-white rounded-t-lg">
             <div className="flex items-center space-x-2">
