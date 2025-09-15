@@ -337,11 +337,93 @@ How can I assist you today?`,
     }, 100)
   }
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setInputMessage(suggestion)
-    // Auto-submit the suggestion
+  const handleSuggestionClick = async (suggestion: string) => {
+    if (isLoading) return
+    
+    // Add user message immediately
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      message: suggestion,
+      sender: "user",
+      timestamp: new Date().toISOString(),
+    }
+    setMessages((prev) => [...prev, userMessage])
+    
+    // Clear input and start loading
+    setInputMessage("")
+    setIsLoading(true)
+
+    // Send message to API
+    try {
+      const response = await chatbotApi.sendMessage(suggestion)
+      
+      if (response.success) {
+        let botReply = response.data.reply
+        let navigationData = null
+
+        // Parse JSON responses for navigation
+        try {
+          const parsedReply = JSON.parse(response.data.reply)
+          
+          if (parsedReply.type === "navigation_response") {
+            console.log("Navigation response detected:", parsedReply.navigation)
+            botReply = parsedReply.message || "Navigating..."
+            navigationData = parsedReply.navigation
+          } else if (parsedReply.type === "payment_redirect") {
+            console.log("Payment redirect detected:", parsedReply.payment_url)
+            botReply = parsedReply.message || "💳 Pay Now - Redirecting to secure payment..."
+            
+            setTimeout(() => {
+              window.open(parsedReply.payment_url, '_blank')
+            }, 1000)
+          } else if (parsedReply.type === "message_response") {
+            console.log("Message-only response detected")
+            botReply = parsedReply.message || "Request processed successfully"
+            navigationData = null
+          }
+        } catch (parseError) {
+          // Not JSON, use reply as-is
+          botReply = response.data.reply
+        }
+
+        const botMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          message: botReply,
+          sender: "bot",
+          timestamp: new Date().toISOString(),
+        }
+        setMessages((prev) => [...prev, botMessage])
+
+        // Handle navigation
+        if (navigationData && navigationData.action === "navigate" && navigationData.path) {
+          const delay = navigationData.delay_ms || 1500
+          
+          setTimeout(() => {
+            router.push(navigationData.path)
+          }, delay)
+        }
+      } else {
+        const errorMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          message: response.error || "Sorry, I encountered an error. Please try again.",
+          sender: "bot",
+          timestamp: new Date().toISOString(),
+        }
+        setMessages((prev) => [...prev, errorMessage])
+      }
+    } catch (error) {
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        message: "Sorry, I encountered an error. Please try again or contact support.",
+        sender: "bot",
+        timestamp: new Date().toISOString(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+    }
+
+    setIsLoading(false)
     setTimeout(() => {
-      handleSendMessage()
+      inputRef.current?.focus()
     }, 100)
   }
 
@@ -377,7 +459,7 @@ How can I assist you today?`,
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-4 right-4 w-full max-w-sm sm:w-96 h-[85vh] sm:h-[500px] max-h-[600px] bg-white rounded-lg shadow-xl z-50 flex flex-col border mx-4 sm:mx-0">
+        <div className="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:right-6 sm:left-auto w-auto sm:w-96 h-[80vh] sm:h-[500px] max-h-[600px] bg-white rounded-lg shadow-xl z-50 flex flex-col border">
           {/* Header */}
           <div className="flex items-center justify-between p-3 bg-blue-600 text-white rounded-t-lg">
             <div className="flex items-center space-x-2">
