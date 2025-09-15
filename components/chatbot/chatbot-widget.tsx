@@ -303,6 +303,14 @@ How can I assist you today?`,
           
           console.log(`Scheduling AUTOMATIC navigation to ${navigationData.path} in ${delay}ms`)
           
+          // Auto-minimize chatbot on mobile when redirecting
+          const isMobile = window.innerWidth < 768 // md breakpoint
+          if (isMobile) {
+            setTimeout(() => {
+              setIsOpen(false) // Minimize chatbot on mobile
+            }, delay - 500) // Close slightly before redirect
+          }
+          
           // Automatic navigation
           setTimeout(() => {
             console.log(`Executing AUTOMATIC navigation to: ${navigationData.path}`)
@@ -397,6 +405,14 @@ How can I assist you today?`,
         // Handle navigation
         if (navigationData && navigationData.action === "navigate" && navigationData.path) {
           const delay = navigationData.delay_ms || 1500
+          
+          // Auto-minimize chatbot on mobile when redirecting
+          const isMobile = window.innerWidth < 768 // md breakpoint
+          if (isMobile) {
+            setTimeout(() => {
+              setIsOpen(false) // Minimize chatbot on mobile
+            }, delay - 500) // Close slightly before redirect
+          }
           
           setTimeout(() => {
             router.push(navigationData.path)
