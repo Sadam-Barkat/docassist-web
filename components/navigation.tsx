@@ -150,7 +150,7 @@ export function Navigation() {
 
         {/* Mobile menu */}
         {isMobileMenuOpen && isAuthenticated && (
-          <div className="md:hidden border-t bg-white">
+          <div className="md:hidden border-t bg-white relative z-50">
             <div className="px-4 py-2 space-y-1">
               <Link 
                 href="/dashboard" 
@@ -205,7 +205,7 @@ export function Navigation() {
         {/* Click outside to close mobile menu */}
         {isMobileMenuOpen && (
           <div 
-            className="fixed inset-0 z-40 md:hidden" 
+            className="fixed inset-0 z-30 md:hidden" 
             onClick={() => setIsMobileMenuOpen(false)}
           />
         )}
