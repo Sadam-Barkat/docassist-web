@@ -339,6 +339,10 @@ How can I assist you today?`,
 
   const handleSuggestionClick = (suggestion: string) => {
     setInputMessage(suggestion)
+    // Auto-submit the suggestion
+    setTimeout(() => {
+      handleSendMessage()
+    }, 100)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -373,7 +377,7 @@ How can I assist you today?`,
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-[500px] bg-white rounded-lg shadow-xl z-50 flex flex-col border">
+        <div className="fixed bottom-4 right-4 w-full max-w-sm sm:w-96 h-[85vh] sm:h-[500px] max-h-[600px] bg-white rounded-lg shadow-xl z-50 flex flex-col border mx-4 sm:mx-0">
           {/* Header */}
           <div className="flex items-center justify-between p-3 bg-blue-600 text-white rounded-t-lg">
             <div className="flex items-center space-x-2">
@@ -411,14 +415,14 @@ How can I assist you today?`,
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-4" style={{ maxHeight: '380px' }}>
+          <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-3 sm:space-y-4" style={{ maxHeight: 'calc(100% - 140px)' }}>
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+                  className={`max-w-[85%] sm:max-w-[80%] rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm ${
                     message.sender === "user" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-900"
                   }`}
                 >
@@ -458,40 +462,43 @@ How can I assist you today?`,
           )}
 
           {/* Suggestions */}
-          <div className="px-3 py-2 border-t border-gray-100">
-            <div className="flex flex-wrap gap-2">
+          <div className="px-2 sm:px-3 py-2 border-t border-gray-100">
+            <div className="flex flex-wrap gap-1 sm:gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleSuggestionClick("Show me doctors")}
-                className="text-xs"
+                className="text-xs flex-1 sm:flex-none"
               >
                 <Users className="h-3 w-3 mr-1" />
-                Find Doctor
+                <span className="hidden sm:inline">Find Doctor</span>
+                <span className="sm:hidden">Doctors</span>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleSuggestionClick("Book an appointment")}
-                className="text-xs"
+                className="text-xs flex-1 sm:flex-none"
               >
                 <Calendar className="h-3 w-3 mr-1" />
-                Book Appointment
+                <span className="hidden sm:inline">Book Appointment</span>
+                <span className="sm:hidden">Book</span>
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleSuggestionClick("Open my profile")}
-                className="text-xs"
+                className="text-xs flex-1 sm:flex-none"
               >
                 <Bot className="h-3 w-3 mr-1" />
-                My Profile
+                <span className="hidden sm:inline">My Profile</span>
+                <span className="sm:hidden">Profile</span>
               </Button>
             </div>
           </div>
 
           {/* Input Area - Fixed at bottom */}
-          <div className="p-3 border-t border-gray-200 bg-white rounded-b-lg">
+          <div className="p-2 sm:p-3 border-t border-gray-200 bg-white rounded-b-lg">
             <div className="flex space-x-2 items-end">
               <Textarea
                 ref={inputRef}
@@ -500,13 +507,13 @@ How can I assist you today?`,
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
                 disabled={isLoading}
-                className="flex-1 min-h-[40px] max-h-[120px] resize-none"
+                className="flex-1 min-h-[36px] sm:min-h-[40px] max-h-[100px] sm:max-h-[120px] resize-none text-sm"
                 autoComplete="off"
                 autoFocus
                 rows={1}
               />
-              <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isLoading} size="icon" className="h-10 w-10 shrink-0">
-                <Send className="h-4 w-4" />
+              <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isLoading} size="icon" className="h-9 w-9 sm:h-10 sm:w-10 shrink-0">
+                <Send className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </div>
           </div>
